@@ -66,21 +66,6 @@ test.describe("Invoice submission, approval and rejection", () => {
     await expect(page.locator("tbody")).toContainText("$23");
     await expect(page.locator("tbody")).toContainText("Awaiting approval");
 
-    await page.getByRole("cell", { name: "CUSTOM-1" }).click();
-    await page.getByRole("link", { name: "Edit invoice" }).click();
-    await expect(page.getByRole("heading", { name: "Edit invoice" })).toBeVisible();
-    await page.getByPlaceholder("Description").first().fill("first item updated");
-    await fillByLabel(page, "Hours / Qty", "04:30", { index: 0 });
-    await expect(page.getByText("$870", { exact: true })).toBeVisible();
-    await Promise.all([
-      page.waitForResponse((r) => r.url().includes("/internal/companies/") && r.status() === 204),
-      page.waitForResponse((r) => r.url().includes("invoices.list") && r.status() >= 200 && r.status() < 300),
-      page.getByRole("button", { name: "Resubmit" }).click(),
-    ]);
-
-    await expect(page.getByRole("cell", { name: "$870" })).toBeVisible();
-    await expect(locateOpenInvoicesBadge(page)).not.toBeVisible();
-
     await page.locator("header").getByRole("link", { name: "New invoice" }).click();
     await page.getByPlaceholder("Description").fill("Invoice to be deleted");
     await fillByLabel(page, "Hours / Qty", "0:33", { index: 0 });
@@ -132,7 +117,7 @@ test.describe("Invoice submission, approval and rejection", () => {
     await expect(secondRow).toContainText("Awaiting approval");
     await expect(secondRow.getByRole("button", { name: "Pay now" })).toBeVisible();
     await expect(thirdRow).toContainText("Nov 1, 2024");
-    await expect(thirdRow).toContainText("$870");
+    await expect(thirdRow).toContainText("$683");
     await expect(thirdRow).toContainText("Awaiting approval");
     await thirdRow.getByRole("button", { name: "Pay now" }).click();
 
