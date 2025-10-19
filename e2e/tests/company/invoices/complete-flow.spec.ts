@@ -73,6 +73,8 @@ test.describe("Invoice submission, approval and rejection", () => {
     await fillDatePicker(page, "Date", "12/01/2024");
     await page.getByRole("button", { name: "Send invoice" }).click();
 
+    //Remove editing
+
     await expect(page.getByRole("cell", { name: "CUSTOM-3" })).toBeVisible();
     await expect(page.locator("tbody")).toContainText("Dec 1, 2024");
     await expect(page.locator("tbody")).toContainText("$33");
